@@ -1,0 +1,2 @@
+2nd_batch_rename.py removes the ability to skip the digit: 3  in the renaming process.
+program_above uses shutil's module instead of safer send2trash module
