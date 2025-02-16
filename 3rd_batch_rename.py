@@ -8,20 +8,20 @@ import os
 from send2trash import send2trash
 from pprint import pprint
 import re
-from secretkeys import secret_key_1, secret_key_2, secret_key_3, secret_key_4, new_name_for_2nd_batch_rename
+from secretkeys import secret_key_1, secret_key_2, secret_key_3, secret_key_4, new_name_for_3rd_batch_rename, source_folder
 
 #switch the names of the particular ###:edit:
-secret_key_3 = new_name_for_2nd_batch_rename
+secret_key_3 = new_name_for_3rd_batch_rename
 
 #basedir
 basedir = os.getcwd()
 print("basedir,", basedir)
 
 #get videos dir.name
-videosdir = f"{secret_key_1}/{secret_key_4}"
+videosdir = f"{source_folder}"
 
 #name output dir
-output_dir = f"{secret_key_1}/{secret_key_4}___modified"
+output_dir = f"{source_folder}___modified"
 print("output_dir,", output_dir)
 return_output = os.path.isdir(output_dir)
 print("return_output,", return_output)
@@ -44,7 +44,7 @@ def test_prints():
     print(output_regEx.pos)
     print(output_regEx.string[output_regEx.end():])
     #dont forget to strip leading spaces
-# test_prints()
+test_prints()
 
 #create a unique list of numbers because I need to skip a number
 def range_function():
@@ -62,6 +62,7 @@ def function__1():
         output_regEx = regExExample.search(i)
         output_regEx_position = output_regEx.end()
         toBeCopied_or_moved = i[output_regEx_position:].lstrip()
+        print("TEST-PRINT:", toBeCopied_or_moved)
         combined_item = os.path.join(videosdir, toBeCopied_or_moved)
         new_list.append(combined_item)
     return new_list
@@ -70,20 +71,11 @@ def function__1():
 #get base
 def function__2(elem):
     basename_modified_prepended = secret_key_3
-    count = 0
     for ei, i in enumerate(elem):
-        if count < 9:
-            basename = os.path.basename(i)
-            dirname = os.path.dirname(i)
-            basename_modified = f"{basename_modified_prepended} |0{count+1}| {basename}"
-            count += 1
-            elem[ei] = os.path.join(dirname, basename_modified)
-        elif count >= 9:
-            basename = os.path.basename(i)
-            dirname = os.path.dirname(i)
-            basename_modified = f"{basename_modified_prepended} |{count+1}| {basename}"
-            count += 1
-            elem[ei] = os.path.join(dirname, basename_modified)
+        basename = os.path.basename(i)
+        dirname = os.path.dirname(i)
+        basename_modified = f"{basename_modified_prepended} {basename}"
+        elem[ei] = os.path.join(dirname, basename_modified)
     return elem 
 
 #
@@ -115,45 +107,21 @@ def for_Each(elem):
 #test print(s):
 # pprint(sorted(os.listdir(videosdir)))
 print("\nNew-line:")
-pprint(os.listdir(output_dir))
 
 if __name__ == '__main__':
     original_list = original_list()
-    # for_Each(original_list)
-    #what is the directory_name:
     directory_name = videosdir
-    #what will the file_paths look like
-    #when I join strings together
-    # for i in original_list:
-    #     print(os.path.join(directory_name, i))
-    #what is the output_directory? #output_dir
-    
-    #
     elem = function__1()
     lists_of_simpleBasenames = []
     for i in elem:
         lists_of_simpleBasenames.append(os.path.basename(i))
-    # for i in lists_of_simpleBasenames:
-    #     print(i)
-    # for_Each(elem)
-    #
-    #
-    #
     elem = function__2(elem)
     lists_of_modifiedBasenames = []
     for i in elem:
         lists_of_modifiedBasenames.append(os.path.basename(i))
-    # for i in lists_of_modifiedBasenames:
-    #     print(i)
-    # for i in original_list:
-    #     print(i)
-    # for_Each(elem)
-    #
-    #
-    #
-    print(len(lists_of_simpleBasenames))
+    print("len(lists_of_simpleBasenames),", len(lists_of_simpleBasenames))
     print(videosdir) # this is a path
-    print(len(os.listdir(videosdir)))
+    print("len(os.listdir(videosdir)),",len(os.listdir(videosdir)))
     items_in_directory = sorted(os.listdir(videosdir))
     if os.listdir(output_dir):
         print("len-dir,", len(os.listdir(output_dir)))
@@ -165,33 +133,21 @@ if __name__ == '__main__':
         print('dir-re-created')
     for index, items in enumerate(items_in_directory):
         regexObj = re.compile(f'{lists_of_simpleBasenames[index]}').search(items_in_directory[index])
-        # print(dir(regexObj))
         start_pos = regexObj.start()
-        # print("start_pos", start_pos)
         end_pos = regexObj.endpos
-        # print("end_pos", end_pos)
         check_criteria = items_in_directory[index][start_pos:end_pos]
-        # print(lists_of_modifiedBasenames[index])
-        # print(check_criteria)
-        # print(items_in_directory[index])
         if re.compile(check_criteria).search(lists_of_modifiedBasenames[index]):
             dir_name = videosdir
             base_name = items_in_directory[index]
             path_source = os.path.join(dir_name, base_name)
-            # print(path_source)
             dirname_output = output_dir
-            # print("isDir?:", os.path.isdir(dirname_output))
             basename_output = lists_of_modifiedBasenames[index]
             path_output = os.path.join(dirname_output, basename_output)
             shutil.copy(path_source, path_output)
-            # print('output-dir-is-empty', output_dir, os.path.isdir(output_dir))
             print('files-added')
         else: 
             print("False---")
 
     for i in sorted(os.listdir(dirname_output)):
         print(i)
-    
-    # for i in elem:
-    #     print(i)
     

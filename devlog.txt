@@ -1,0 +1,6 @@
+I forgot to write a commit message on my previous commit: 
+commit message for previous commit:
+:wrote spaghetti code at the end
+
+<2nd_batch_rename.py log: >
+renamed one of the secret keys name. 
